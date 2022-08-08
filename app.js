@@ -188,14 +188,15 @@ const wordSets = {
     },
 };
 
-const numbers0To30 = wordSets.numbers0To30;
+const sleepAfterPromptMs = 4000;
+const sleepAfterAnswerMs = 1500;
 
 const wordSetMap = new Map(Object.entries(wordSets));
 
 const app = Vue.createApp({
     data() {
         return {
-            promt: 1,
+            prompt: 1,
             answer: "yksi",
             wordSetMap: wordSetMap,
             currentWordSetName: "numbers0To10",
@@ -207,7 +208,13 @@ const app = Vue.createApp({
         getPrompt() {
             const map = new Map(Object.entries(this.currentWordSet.prompts));
             let keys = Array.from(map.keys());
-            return keys[Math.floor(Math.random() * keys.length)];
+            let newPrompt;
+            let attempt = 1;
+            do {
+                console.debug(`Attempting to get prompt, attempt ${attempt}...`)
+                newPrompt = keys[Math.floor(Math.random() * keys.length)];
+            } while (newPrompt == this.prompt);
+            return newPrompt;
         },
         getAnswer(x) {
             return this.currentWordSet.prompts[x];
@@ -225,16 +232,18 @@ const app = Vue.createApp({
     async mounted() {
         this.timer = setInterval(async () => {
             nextPrompt = this.getPrompt();
-            console.log(`Got promt: ${nextPrompt}`);
+            console.log(`Got prompt: '${nextPrompt}'.`);
             this.answer = "🤔";
-            this.promt = nextPrompt;
+            this.prompt = nextPrompt;
             const answer = this.getAnswer(nextPrompt);
-            await this.sleep(4000);
+            console.log(`Got answer: '${answer}'.`);
+            console.debug(`Sleeping for ${sleepAfterPromptMs} ms...`);
+            await this.sleep(sleepAfterPromptMs);
             this.answer = answer;
-            console.log(`Got answer: ${this.answer}.`);
-            await this.sleep(1500);
-            console.log(`Sleeping...`);
-        }, 5500);
+            console.debug("Set answer.")
+            console.debug(`Sleeping for ${sleepAfterAnswerMs} ms...`);
+            await this.sleep(sleepAfterAnswerMs);
+        }, sleepAfterPromptMs + sleepAfterAnswerMs);
     },
     beforeDestroy() {
         clearInterval(this.timer);
