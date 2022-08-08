@@ -64,6 +64,7 @@ button {
     border-radius: 2rem;
 }
 
+button.active,
 button:hover {
     border-style: solid;
 }
