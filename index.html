@@ -15,13 +15,17 @@
                 <h1>{{ title }}</h1>
             </header>
             <section>
-                <p>{{ i }}</p>
+                <p>{{ promt }}</p>
                 <p>{{ answer }}</p>
+            </section>
+            <section>
+                <div v-for="[key, value] in wordSetMap">
+                    <button v-if="key != currentWordSetName" @click="change(key)">{{ value.title }}</button>
+                </div>
             </section>
         </div>
         <div class="footer">
-            Made with 🖤 by <a href="https://github.com/salmiakki/sanastovalmentaja">salmiakki</a>, kaksituhatta
-            kaksikymmentäkaksi.
+            Made with 🖤 by <a href="https://github.com/salmiakki/sanastovalmentaja">salmiakki</a>.
         </div>
     </body>
 </html>

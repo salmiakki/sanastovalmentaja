@@ -59,3 +59,19 @@ header {
     font-size: 1rem;
     text-align: center;
 }
+
+button {
+    border-width: 5px;
+    border-style: dashed;
+    border-color: #002f6c;
+    background-color: white;
+    height: 3rem;
+    width: 50%;
+    font-size: 1.5rem;
+    margin: 1rem;
+    border-radius: 2rem;
+}
+
+button:hover {
+    border-style: solid;
+}
