@@ -10,7 +10,7 @@
         <script src="app.js" defer></script>
     </head>
     <body>
-        <div id="app">
+        <div id="app" class="content">
             <header>
                 <h1>{{ title }}</h1>
             </header>
@@ -23,6 +23,8 @@
                     <button v-if="key != currentWordSetName" @click="change(key)">{{ value.title }}</button>
                 </div>
             </section>
+
+            <div class="push"></div>
         </div>
         <div class="footer">
             Made with 🖤 by <a href="https://github.com/salmiakki/sanastovalmentaja">salmiakki</a>.
