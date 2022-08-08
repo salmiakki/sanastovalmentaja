@@ -14,8 +14,9 @@ body {
 
 header {
     /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
-    margin: 0.5rem auto;
-    border-radius: 10px;
+    margin: 0rem auto;
+    /* border-radius: 10px; */
+    /* border-color: #002f6c; */
     padding: 0.5rem;
     background-color: white;
     color: #002f6c;
@@ -36,13 +37,19 @@ header {
 
 #app h1 {
     font-size: 3rem;
-    border-bottom: 4px solid #ccc;
+    /* border-bottom: 4px solid #002f6c; */
     color: #002f6c;
     /* background-color: #002F6C;   */
-    margin: 0 0 1rem 0;
+    margin: 0.1rem;
 }
 
-#app p {
+hr {
+    margin: 1rem auto;
+    width: 90%;
+    border-bottom: 3px solid #002f6c;
+}
+
+#app div {
     font-size: 1.5rem;
     font-weight: bold;
     /* border: 1px solid #4fc08d; */

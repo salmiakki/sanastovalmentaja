@@ -14,17 +14,19 @@
             <header>
                 <h1>{{ title }}</h1>
             </header>
-            <section>
-                <p>{{ prompt }}</p>
-                <p>{{ answer }}</p>
-            </section>
-            <section>
-                <div v-for="[key, value] in wordSetMap">
-                    <button v-bind:class="{ active: key == currentWordSetName }" @click="change(key)">
-                        {{ value.title }}
-                    </button>
-                </div>
-            </section>
+
+            <hr />
+
+            <div>{{ prompt }}</div>
+            <div>{{ answer }}</div>
+
+            <hr />
+
+            <div v-for="[key, value] in wordSetMap">
+                <button v-bind:class="{ active: key == currentWordSetName }" @click="change(key)">
+                    {{ value.title }}
+                </button>
+            </div>
 
             <div class="push"></div>
         </div>
