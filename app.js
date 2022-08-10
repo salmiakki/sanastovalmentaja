@@ -262,14 +262,18 @@ const app = Vue.createApp({
             this.title = wordSetMap.get(x).title;
         },
         speak(text, language = null, rate = null) {
+            console.debug(`speak(text=${text}, language=${language}, rate = ${rate})`);
             let utterance = new SpeechSynthesisUtterance(text.replace("_", ""));
             if (language !== null) {
-                utterance.lang = lang;
+                utterance.lang = language;
             }
             if (rate !== null) {
                 utterance.rate = rate;
             }
             speechSynthesis.speak(utterance);
+        },
+        sayInFinnish(text) {
+            this.speak(text, "fi-FI", 0.8);
         }
     },
     async mounted() {
@@ -279,7 +283,7 @@ const app = Vue.createApp({
             console.log(`shouldTalk = '${shouldTalk}'.`);
             if (shouldTalk) {
                 const promptToSpeak = nextPrompt.replace("_", "");
-                this.speak(promptToSpeak, this.currentWordSetName.toLowerCase().endsWith("ru") ? "ru-RU" : null);
+                this.speak(promptToSpeak, this.currentWordSetName.toLowerCase().endsWith("ru") ? "ru-RU" : "en-GB");
             }
 
             console.log(`Got prompt: '${nextPrompt}'.`);
@@ -293,10 +297,7 @@ const app = Vue.createApp({
             this.answer = answer;
 
             if (shouldTalk) {
-                let answerUtterance = new SpeechSynthesisUtterance(answer.replace("_", ""));
-                answerUtterance.lang = "fi-Fi";
-                answerUtterance.rate = 0.8;
-                speechSynthesis.speak(answerUtterance);
+                this.sayInFinnish(answer.replace("_", ""));                
             }
 
             console.debug("Set answer.");
