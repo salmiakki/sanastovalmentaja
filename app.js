@@ -154,9 +154,25 @@ const wordSets = {
             97: "yhdeksän_kymmentä_seitsemän",
             98: "yhdeksän_kymmentä_kahdeksan",
             99: "yhdeksän_kymmentä_yhdeksän",
-            100: "s_a_t_a",
+            100: "sata",
         },
     },
+    // numbers0To10Puhekieli: {
+    //     title: "0–10 (Puhekieli)",
+    //     prompts: {
+    //         0: "nolla",
+    //         1: "yks",
+    //         2: "kaks",
+    //         3: "kolme",
+    //         4: "neljä",
+    //         5: "viis",
+    //         6: "kuus",
+    //         7: "seittemän",
+    //         8: "kaheksan",
+    //         9: "yheksän",
+    //         10: "kymmenen",
+    //     },
+    // },
     months: {
         title: "Months",
         prompts: {
@@ -171,7 +187,25 @@ const wordSets = {
             September: "syyskuu",
             October: "lokakuu",
             November: "marraskuu",
-            December: "Joulukuu",
+            December: "joulukuu",
+        },
+       
+    },
+    monthsRu: {
+        title: "Месяцы",
+        prompts: {
+            январь: "tammikuu",
+            февраль: "helmikuu",
+            март: "maaliskuu",
+            апрель: "huhtikuu",
+            май: "toukokuu",
+            июнь: "kesäkuu",
+            июль: "heinäkuu",
+            август: "elokuu",
+            сентябрь: "syyskuu",
+            октябрь: "lokakuu",
+            ноябрь: "marraskuu",
+            декабрь: "joulukuu",
         },
     },
     daysOfTheWeek: {
@@ -211,7 +245,7 @@ const app = Vue.createApp({
             let newPrompt;
             let attempt = 1;
             do {
-                console.debug(`Attempting to get prompt, attempt ${attempt}...`)
+                console.debug(`Attempting to get prompt, attempt ${attempt}...`);
                 newPrompt = keys[Math.floor(Math.random() * keys.length)];
             } while (newPrompt == this.prompt);
             return newPrompt;
@@ -232,15 +266,31 @@ const app = Vue.createApp({
     async mounted() {
         this.timer = setInterval(async () => {
             nextPrompt = this.getPrompt();
+            const shouldTalk = this.currentWordSetName == "monthsRu";
+            console.log(`shouldTalk = '${shouldTalk}'.`);
+            if (shouldTalk) {
+                let promptUtterance = new SpeechSynthesisUtterance(nextPrompt.replace("_", "") + "?");
+                promptUtterance.lang = 'ru-RU';
+                speechSynthesis.speak(promptUtterance)
+            }
+            
             console.log(`Got prompt: '${nextPrompt}'.`);
             this.answer = "🤔";
             this.prompt = nextPrompt;
             const answer = this.getAnswer(nextPrompt);
             console.log(`Got answer: '${answer}'.`);
+
             console.debug(`Sleeping for ${sleepAfterPromptMs} ms...`);
             await this.sleep(sleepAfterPromptMs);
             this.answer = answer;
-            console.debug("Set answer.")
+
+                if (shouldTalk) {
+                let answerUtterance = new SpeechSynthesisUtterance(answer.replace("_", ""));
+                answerUtterance.lang = 'fi-Fi'
+                speechSynthesis.speak(answerUtterance)
+            }
+            
+            console.debug("Set answer.");
             console.debug(`Sleeping for ${sleepAfterAnswerMs} ms...`);
             await this.sleep(sleepAfterAnswerMs);
         }, sleepAfterPromptMs + sleepAfterAnswerMs);
