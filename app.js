@@ -1,3 +1,14 @@
+let hasEnabledVoice = false;
+
+document.addEventListener('click', () => {
+  if (hasEnabledVoice) {
+    return;
+  }
+  const enabled = new SpeechSynthesisUtterance('Enabled');
+  speechSynthesis.speak(enabled);
+  hasEnabledVoice = true;
+});
+
 const wordSets = {
     numbers0To10: {
         title: "0–10",
@@ -262,7 +273,7 @@ const app = Vue.createApp({
             this.title = wordSetMap.get(x).title;
         },
         speak(text, language = null, rate = null) {
-            let utterance = new SpeechSynthesisUtterance(text.replace("_", "") + "?");
+            let utterance = new SpeechSynthesisUtterance(text.replace("_", ""));
             if (language !== null) {
                 utterance.lang = lang;
             }
