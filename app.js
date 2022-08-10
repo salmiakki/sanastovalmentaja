@@ -261,18 +261,25 @@ const app = Vue.createApp({
             this.currentWordSet = wordSetMap.get(x);
             this.title = wordSetMap.get(x).title;
         },
+        speak(text, language = null, rate = null) {
+            let utterance = new SpeechSynthesisUtterance(text.replace("_", "") + "?");
+            if (language !== null) {
+                utterance.lang = lang;
+            }
+            if (rate !== null) {
+                utterance.rate = rate;
+            }
+            speechSynthesis.speak(utterance);
+        }
     },
     async mounted() {
         this.timer = setInterval(async () => {
             nextPrompt = this.getPrompt();
-            const shouldTalk = false && this.currentWordSetName == "monthsRu" || this.currentWordSetName == "months" || true;
+            const shouldTalk = true;
             console.log(`shouldTalk = '${shouldTalk}'.`);
             if (shouldTalk) {
-                let promptUtterance = new SpeechSynthesisUtterance(nextPrompt.replace("_", "") + "?");
-                if (this.currentWordSetName.toLowerCase().endsWith("ru") || true) {
-                    promptUtterance.lang = "ru-RU";
-                }
-                speechSynthesis.speak(promptUtterance);
+                const promptToSpeak = nextPrompt.replace("_", "");
+                this.speak(promptToSpeak, this.currentWordSetName.toLowerCase().endsWith("ru") ? "ru-RU" : null);
             }
 
             console.log(`Got prompt: '${nextPrompt}'.`);
