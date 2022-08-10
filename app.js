@@ -189,25 +189,24 @@ const wordSets = {
             November: "marraskuu",
             December: "joulukuu",
         },
-       
     },
-    monthsRu: {
-        title: "Месяцы",
-        prompts: {
-            январь: "tammikuu",
-            февраль: "helmikuu",
-            март: "maaliskuu",
-            апрель: "huhtikuu",
-            май: "toukokuu",
-            июнь: "kesäkuu",
-            июль: "heinäkuu",
-            август: "elokuu",
-            сентябрь: "syyskuu",
-            октябрь: "lokakuu",
-            ноябрь: "marraskuu",
-            декабрь: "joulukuu",
-        },
-    },
+    // monthsRu: {
+    //     title: "Месяцы 🔊",
+    //     prompts: {
+    //         январь: "tammikuu",
+    //         февраль: "helmikuu",
+    //         март: "maaliskuu",
+    //         апрель: "huhtikuu",
+    //         май: "toukokuu",
+    //         июнь: "kesäkuu",
+    //         июль: "heinäkuu",
+    //         август: "elokuu",
+    //         сентябрь: "syyskuu",
+    //         октябрь: "lokakuu",
+    //         ноябрь: "marraskuu",
+    //         декабрь: "joulukuu",
+    //     },
+    // },
     daysOfTheWeek: {
         title: "Days of the week",
         prompts: {
@@ -266,14 +265,16 @@ const app = Vue.createApp({
     async mounted() {
         this.timer = setInterval(async () => {
             nextPrompt = this.getPrompt();
-            const shouldTalk = this.currentWordSetName == "monthsRu";
+            const shouldTalk = false && this.currentWordSetName == "monthsRu" || this.currentWordSetName == "months" || true;
             console.log(`shouldTalk = '${shouldTalk}'.`);
             if (shouldTalk) {
                 let promptUtterance = new SpeechSynthesisUtterance(nextPrompt.replace("_", "") + "?");
-                promptUtterance.lang = 'ru-RU';
-                speechSynthesis.speak(promptUtterance)
+                if (this.currentWordSetName.toLowerCase().endsWith("ru") || true) {
+                    promptUtterance.lang = "ru-RU";
+                }
+                speechSynthesis.speak(promptUtterance);
             }
-            
+
             console.log(`Got prompt: '${nextPrompt}'.`);
             this.answer = "🤔";
             this.prompt = nextPrompt;
@@ -284,12 +285,13 @@ const app = Vue.createApp({
             await this.sleep(sleepAfterPromptMs);
             this.answer = answer;
 
-                if (shouldTalk) {
+            if (shouldTalk) {
                 let answerUtterance = new SpeechSynthesisUtterance(answer.replace("_", ""));
-                answerUtterance.lang = 'fi-Fi'
-                speechSynthesis.speak(answerUtterance)
+                answerUtterance.lang = "fi-Fi";
+                answerUtterance.rate = 0.8;
+                speechSynthesis.speak(answerUtterance);
             }
-            
+
             console.debug("Set answer.");
             console.debug(`Sleeping for ${sleepAfterAnswerMs} ms...`);
             await this.sleep(sleepAfterAnswerMs);
