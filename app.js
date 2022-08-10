@@ -1,6 +1,8 @@
 let hasEnabledVoice = false;
 
-document.addEventListener('click', () => {
+const enableTtsButton = document.getElementById("enable_tts")
+
+enableTtsButton.addEventListener('click', () => {
   if (hasEnabledVoice) {
     return;
   }
