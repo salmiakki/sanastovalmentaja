@@ -219,6 +219,60 @@ const wordSets = {
             Sunday: "sunnuntai",
         },
     },
+    familyRu: {
+        title: "Perhe – семья",
+        prompts: {
+            "мать": "äiti",
+            "жена": "vaimo",
+            "отец": "isä",
+            "муж, мужчина": "mies",
+            "дети": "lapset",
+            "младенец": "vauva, taapero",
+            "сын, мальчик": "poika",
+            "дочь": "tytär",
+            "сестра": "sisko",
+            "брат": "veli",
+            "тётя": "täti",
+            "дядя": "setä",
+            "дядя по материнской линии": "eno",
+            "двоюродные брат, сестра ": "serkku",
+            "племянник": "siskonpoika, siskontytär, veljenpoika, veljentytär",
+            "тёща, свекровь": "anoppi",
+            "тесть, свёкр": "appi",
+            "бабушка": "isoäiti, mummo, mummu",
+            "дедушка": "isoisä, ukki, vaari, pappa",
+            "внук": "lapsenlapsi (-et)",
+            "крёстные": "kummi- ...täti, setä, tytär, poika",
+            "«новая» семья": "uusperhe",
+            "отчим, мачеха": "isäpuoli, äitipuoli",
+            "сводные сестра, брат": "siskopuoli, velipuoli",
+            "опекун": "huoltaja",
+            "бойфренд, гёрлфренд": "poikaystävä, tyttöystävä"
+        }
+    },  
+    petsRu: {
+        title: "Lemmikit – домашние животные",
+        prompts: {
+            кошка: "kissa",
+            собака: "koira",
+            кролик: "kani",
+            черепаха: "kilpikonna",
+            хомяк: "hamsteri",
+            "морская свинка": "marsu",
+            крыса: "rotta",
+            песчанка: "gerbiili",
+            попугай: "papukaija",
+            рыбки: "kalat",
+            змея: "käärme",
+            ящерица: "lisko",
+            улитка: "kotilo",
+            минипиг: "minisika, minipossu",
+            паук: "hämähäkki",
+            хорёк: "fretti",
+            енот: "pesukarhu",
+            лиса: "kettu",
+        },
+    },
 };
 
 const sleepAfterPromptMs = 4000;
@@ -229,12 +283,12 @@ const wordSetMap = new Map(Object.entries(wordSets));
 const app = Vue.createApp({
     data() {
         return {
-            prompt: 1,
-            answer: "yksi",
+            prompt: "Choose a word set below to start",
+            answer: "🤔",
             wordSetMap: wordSetMap,
-            currentWordSetName: "numbers0To10",
-            currentWordSet: wordSetMap.get("numbers0To10"),
-            title: wordSetMap.get("numbers0To10").title,
+            currentWordSetName: null,
+            currentWordSet: null,
+            title: "Sanastovalmentaja 🇫🇮",
         };
     },
     methods: {
@@ -261,18 +315,32 @@ const app = Vue.createApp({
             this.currentWordSet = wordSetMap.get(x);
             this.title = wordSetMap.get(x).title;
         },
+        speak(text, language = null, rate = null) {
+            console.debug(`speak(text=${text}, language=${language}, rate = ${rate})`);
+            let utterance = new SpeechSynthesisUtterance(text.replace("_", ""));
+            if (language !== null) {
+                utterance.lang = language;
+            }
+            if (rate !== null) {
+                utterance.rate = rate;
+            }
+            speechSynthesis.speak(utterance);
+        },
+        sayInFinnish(text) {
+            this.speak(text, "fi-FI", 0.8);
+        },
     },
     async mounted() {
         this.timer = setInterval(async () => {
+            if (this.currentWordSet === null) {
+                return;
+            }
             nextPrompt = this.getPrompt();
-            const shouldTalk = false;
+            const shouldTalk = true;
             console.log(`shouldTalk = '${shouldTalk}'.`);
             if (shouldTalk) {
-                let promptUtterance = new SpeechSynthesisUtterance(nextPrompt.replace("_", "") + "?");
-                if (this.currentWordSetName.toLowerCase().endsWith("ru") || true) {
-                    promptUtterance.lang = "ru-RU";
-                }
-                speechSynthesis.speak(promptUtterance);
+                const promptToSpeak = nextPrompt.replace("_", "");
+                this.speak(promptToSpeak, this.currentWordSetName.toLowerCase().endsWith("ru") ? "ru-RU" : "en-GB");
             }
 
             console.log(`Got prompt: '${nextPrompt}'.`);
@@ -286,10 +354,7 @@ const app = Vue.createApp({
             this.answer = answer;
 
             if (shouldTalk) {
-                let answerUtterance = new SpeechSynthesisUtterance(answer.replace("_", ""));
-                answerUtterance.lang = "fi-Fi";
-                answerUtterance.rate = 0.8;
-                speechSynthesis.speak(answerUtterance);
+                this.sayInFinnish(answer.replace("_", ""));
             }
 
             console.debug("Set answer.");
@@ -303,3 +368,5 @@ const app = Vue.createApp({
 });
 
 app.mount("#app");
+
+// абвгдеёжзийклмнопрстуфхцчшщъыьэюя
